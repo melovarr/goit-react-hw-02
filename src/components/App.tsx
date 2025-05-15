@@ -3,6 +3,9 @@ import Mailbox from "./Mailbox/Mailbox";
 import Bookcais from "./Book/Book";
 import Button from "./Button/Button";
 import UserMenu from "./UserMenu/UserMenu";
+import ClickCounter from "./ClickCounter/ClickCounter";
+import ClickCounterA from "./ClickCounter-a/ClickCounter-a";
+import XchangeY from "./X_Y/X_Y";
 import { useState } from "react";
 
 // function Product() {
@@ -28,6 +31,15 @@ export default function App() {
   };
   return (
     <>
+      <div>
+        <ClickCounterA value={clicks} onUpdate={handleClick3} />
+        <ClickCounterA value={clicks} onUpdate={handleClick3} />
+      </div>
+      <div>
+        <ClickCounter />
+        <ClickCounter />
+      </div>
+      <XchangeY />
       <UserMenu name="Kolotoon" />
       <button onClick={handleClick}>Click me!</button>
       <button onClick={handleClick2}>First button</button>
