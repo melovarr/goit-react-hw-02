@@ -5,17 +5,20 @@ import Button from "./Button/Button";
 import UserMenu from "./UserMenu/UserMenu";
 import ClickCounter from "./ClickCounter/ClickCounter";
 import ClickCounterA from "./ClickCounter-a/ClickCounter-a";
+import FormDataFnc from "./FormData/FormData";
 import XchangeY from "./X_Y/X_Y";
+import OrderForm from "./OrderForm/OrderForm";
+import SearchForm from "./SearchForm/SearchForm";
+import type { Article } from "../types/article";
+import ArticleList from "./SearchForm/ArticleList";
 import { useState } from "react";
+import axios from "axios";
+import { fetchArticles } from "../services/articleService";
+import DelForm from "./DelForm/DelForm";
 
-// function Product() {
-//   return (
-//     <div>
-//       <h2>Cookies</h2>
-//       <p>Price: 999 credits</p>
-//     </div>
-//   );
-// }
+interface ArticlesHttpResponse {
+  hits: Article[];
+}
 
 export default function App() {
   const handleClick = () => {
@@ -29,8 +32,51 @@ export default function App() {
     setClicks(clicks + 1);
     console.log(clicks);
   };
+
+  const handleOrder = (data: string) => {
+    console.log("Order received from: ", data);
+  };
+  //-----SerchForm-------
+  const [articles, setArticles] = useState<Article[]>([]);
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [isError, setIsError] = useState(false);
+
+  const handleSearch = async (topic: string) => {
+    try {
+      setIsLoading(true);
+      setIsError(false);
+
+      const data = await fetchArticles(topic);
+
+      setArticles(data);
+      console.log(data);
+    } catch {
+      setIsError(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <>
+      <div>
+        <DelForm />
+      </div>
+      <div>
+        <SearchForm onSubmit={handleSearch} />
+        {isLoading && <p>Loading data, please wait...</p>}
+        {isError && <p>Whoops, something went wrong! Please try again!</p>}
+        {articles.length > 0 && <ArticleList hits={articles} />}
+      </div>
+      <div>
+        <h2>Place your order</h2>
+        <OrderForm onSubmit={handleOrder} />
+      </div>
+      <div>
+        <FormDataFnc />
+      </div>
       <div>
         <ClickCounterA value={clicks} onUpdate={handleClick3} />
         <ClickCounterA value={clicks} onUpdate={handleClick3} />
